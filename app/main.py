@@ -1,6 +1,6 @@
 import os
 import urllib.request
-from urllib import error
+from urllib.error import HTTPError
 import json
 
 
@@ -18,11 +18,17 @@ def get_weather() -> None:
     try:
         with urllib.request.urlopen(URL) as response:
             content = response.read().decode("utf-8")
-    except urllib.error.HTTPError as e:
+    except HTTPError as e:
         out_error = e
         content = e.fp.read().decode("utf-8")
 
-    data = json.loads(content)
+    try:
+        data = json.loads(content)
+    except json.decoder.JSONDecodeError:
+        print("JSON Decode Error. "
+              "Probably got HTML because of response error.")
+        print(out_error)
+        return
 
     if out_error is not None:
         print(out_error)
