@@ -1,10 +1,14 @@
 import os
+import sys
 import urllib.request
 from urllib.error import HTTPError
 import json
 
 
 API_KEY = os.getenv("API_KEY")
+if API_KEY is None or API_KEY == "":
+    print("API_KEY was not set. Ensure you set this environment variable")
+    sys.exit(1)
 TYPE = "current.json"
 APP_URL = "http://api.weatherapi.com/v1"
 CITY = "Paris"
